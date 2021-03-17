@@ -3,11 +3,13 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.HashMap;
@@ -17,8 +19,8 @@ import java.util.Map;
 
 public class TestWithSelenium {
 
-    private static final String email = "";
-    private static final String password = "";
+    private static final String email = "bidaritterhm@gmail.com";
+    private static final String password = "Nazar2021KPI2021";
     private static final String name = "Саня";
     private static final String surname = "Красівий";
 
@@ -65,14 +67,15 @@ public class TestWithSelenium {
 
         driver.findElement(By.name("login")).click();
 
-        waiter.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("._9ay7")));
-        String errorMessage = driver.findElement(By.cssSelector("._9ay7")).getAttribute("innerText");
-        Assert.assertEquals("Вы ввели неверный пароль. Забыли пароль?", errorMessage);
-
-//        List<WebElement> elements = driver.findElement(By.id("error_box")).findElements(By.tagName("div"));
-//        Assert.assertEquals(elements.get(0).getAttribute("innerText"), "Неверные данные");
-//        Assert.assertEquals(elements.get(1).getAttribute("innerText"), "Неверное имя пользователя или пароль");
-
+        try {
+            waiter.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("._9ay7")));
+            String errorMessage = driver.findElement(By.cssSelector("._9ay7")).getAttribute("innerText");
+            Assert.assertEquals("Вы ввели неверный пароль. Забыли пароль?", errorMessage);
+        } catch (Exception e) {
+            List<WebElement> elements = driver.findElement(By.id("error_box")).findElements(By.tagName("div"));
+            Assert.assertEquals(elements.get(0).getAttribute("innerText"), "Неверные данные");
+            Assert.assertEquals(elements.get(1).getAttribute("innerText"), "Неверное имя пользователя или пароль");
+        }
         driver.quit();
     }
 
@@ -85,9 +88,9 @@ public class TestWithSelenium {
         waiter.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._42ft._4jy0._9o-t._4jy3._4jy1.selected._51sy")));
         driver.findElement(By.cssSelector("._42ft._4jy0._9o-t._4jy3._4jy1.selected._51sy")).click();
 
-        List<WebElement> elements = driver.findElements(By.tagName("input"));
+        List<WebElement> inputs = driver.findElements(By.tagName("input"));
 
-        for (WebElement el : elements){
+        for (WebElement el : inputs){
             switch (el.getAttribute("name")) {
                 case "firstname": el.sendKeys(name);
                 break;
@@ -100,9 +103,35 @@ public class TestWithSelenium {
                 default: break;
             }
         }
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.name("reg_email_confirmation__")));
+        driver.findElement(By.name("reg_email_confirmation__")).sendKeys(email);
 
+        Select select = new Select(driver.findElement(By.name("birthday_day")));
+        select.selectByVisibleText("20");
 
-        Thread.sleep(300000);
+        select = new Select(driver.findElement(By.name("birthday_month")));
+        select.selectByVisibleText("мая");
+
+        select = new Select(driver.findElement(By.name("birthday_year")));
+        select.selectByVisibleText("2014");
+
+        List<WebElement> radioButtons = driver.findElements(By.cssSelector("._8esa"));
+
+        for (WebElement el : radioButtons) {
+            if (el.getAttribute("value").equals("2")) el.click();
+        }
+
+        WebElement registrationButton = driver.findElement(By.name("websubmit"));
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView();", registrationButton);
+
+        registrationButton.click();
+
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.id("error")));
+        String errorMessage = driver.findElement(By.id("error")).findElement(By.tagName("h2")).getAttribute("innerText");
+        Assert.assertEquals(errorMessage, "Извините, мы не можем вас зарегистрировать.");
+
         driver.quit();
     }
 
