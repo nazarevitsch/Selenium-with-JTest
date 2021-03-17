@@ -19,7 +19,8 @@ import java.util.Map;
 
 public class TestWithSelenium {
 
-    private static final String email = "bidaritterhm@gmail.com";
+    private static final String email = "";
+    private static final String invalidEmail = "";
     private static final String password = "Nazar2021KPI2021";
     private static final String name = "Саня";
     private static final String surname = "Красівий";
@@ -34,7 +35,7 @@ public class TestWithSelenium {
     }
 
     @Test
-    public void testLogin1WithData() {
+    public void testLoginWithValidData() {
         WebDriver driver = createWebDriver();
         WebDriverWait waiter = createWebDriverWait(driver);
 
@@ -46,16 +47,16 @@ public class TestWithSelenium {
 
         driver.findElement(By.name("login")).click();
 
-        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/span")));
-        String greeting = driver.findElement(By.xpath("/html/body/div[1]/div/div[1]/div/div[3]/div/div/div[1]/div[1]/div/div[2]/div/div/div[1]/span")).getAttribute("innerText");
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/div/div/div[1]/div/div[3]/div[1]/div[2]/span/span[2]/span")));
+        String greeting = driver.findElement(By.xpath("/html/body/div/div/div[1]/div/div[3]/div[1]/div[2]/span/span[2]/span")).getAttribute("innerText");
 
-        Assert.assertEquals(greeting, "Добро пожаловать на Facebook, "+ name + "!");
+        Assert.assertEquals(greeting, name);
 
         driver.quit();
     }
 
     @Test
-    public void testLogin2WitheData() {
+    public void testLoginWitheInvalidData() {
         WebDriver driver = createWebDriver();
         WebDriverWait waiter = createWebDriverWait(driver);
 
@@ -80,7 +81,7 @@ public class TestWithSelenium {
     }
 
     @Test
-    public void testSignUPWithAlreadyUsedEmail() throws Exception{
+    public void testSignUPWithAlreadyUsedEmail() {
         WebDriver driver = createWebDriver();
         WebDriverWait waiter = createWebDriverWait(driver);
 
@@ -135,6 +136,82 @@ public class TestWithSelenium {
         driver.quit();
     }
 
+
+    @Test
+    public void testSignUPWithInvalidUsedEmail() {
+        WebDriver driver = createWebDriver();
+        WebDriverWait waiter = createWebDriverWait(driver);
+
+        driver.get("https://www.facebook.com/r.php?locale=ru_RU&display=page");
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._42ft._4jy0._9o-t._4jy3._4jy1.selected._51sy")));
+        driver.findElement(By.cssSelector("._42ft._4jy0._9o-t._4jy3._4jy1.selected._51sy")).click();
+
+        List<WebElement> inputs = driver.findElements(By.tagName("input"));
+
+        for (WebElement el : inputs){
+            switch (el.getAttribute("name")) {
+                case "firstname": el.sendKeys(name);
+                    break;
+                case "lastname": el.sendKeys(surname);
+                    break;
+                case "reg_email__": el.sendKeys(invalidEmail);
+                    break;
+                case "reg_passwd__": el.sendKeys(password);
+                    break;
+                default: break;
+            }
+        }
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.name("reg_email_confirmation__")));
+        driver.findElement(By.name("reg_email_confirmation__")).sendKeys(invalidEmail);
+
+        Select select = new Select(driver.findElement(By.name("birthday_day")));
+        select.selectByVisibleText("20");
+
+        select = new Select(driver.findElement(By.name("birthday_month")));
+        select.selectByVisibleText("мая");
+
+        select = new Select(driver.findElement(By.name("birthday_year")));
+        select.selectByVisibleText("2014");
+
+        List<WebElement> radioButtons = driver.findElements(By.cssSelector("._8esa"));
+
+        for (WebElement el : radioButtons) {
+            if (el.getAttribute("value").equals("2")) el.click();
+        }
+
+        WebElement registrationButton = driver.findElement(By.name("websubmit"));
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView();", registrationButton);
+
+        registrationButton.click();
+
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.id("js_0")));
+        String errorMessage = driver.findElement(By.id("js_0")).getAttribute("innerText");
+        Assert.assertEquals(errorMessage, "Введите действительный номер мобильного телефона или эл. адрес.");
+
+        driver.quit();
+    }
+
+    @Test
+    public void testLikeAvatarWhileNotLogin(){
+        WebDriver driver = createWebDriver();
+        WebDriverWait waiter = createWebDriverWait(driver);
+
+        driver.get("https://www.facebook.com/photo/?fbid=2431988927051469&set=a.1376998622550510");
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".hu5pjgll.lzf7d6o1.sp_67hOLVoSKzI.sx_0c1a09")));
+        driver.findElement(By.cssSelector(".hu5pjgll.lzf7d6o1.sp_67hOLVoSKzI.sx_0c1a09")).click();
+
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".oajrlxb2.gs1a9yip.g5ia77u1.mtkw9kbi.tlpljxtp.qensuy8j.ppp5ayq2.goun2846.ccm00jje.s44p3ltw.mk2mc5f4.rt8b4zig.n8ej3o3l.agehan2d.sk4xxmp2.rq0escxv.nhd2j8a9.j83agx80.mg4g778l.btwxx1t3.pfnyh3mw.p7hjln8o.kvgmc6g5.cxmmr5t8.oygrvhab.hcukyx3x.tgvbjcpo.hpfvmrgz.jb3vyjys.rz4wbd8a.qt6c0cv9.a8nywdso.l9j0dhe7.i1ao9s8h.esuyzwwr.f1sip0of.du4w35lb.lzcic4wl.abiwlrkh.p8dawk7l")));
+        driver.findElement(By.cssSelector(".oajrlxb2.gs1a9yip.g5ia77u1.mtkw9kbi.tlpljxtp.qensuy8j.ppp5ayq2.goun2846.ccm00jje.s44p3ltw.mk2mc5f4.rt8b4zig.n8ej3o3l.agehan2d.sk4xxmp2.rq0escxv.nhd2j8a9.j83agx80.mg4g778l.btwxx1t3.pfnyh3mw.p7hjln8o.kvgmc6g5.cxmmr5t8.oygrvhab.hcukyx3x.tgvbjcpo.hpfvmrgz.jb3vyjys.rz4wbd8a.qt6c0cv9.a8nywdso.l9j0dhe7.i1ao9s8h.esuyzwwr.f1sip0of.du4w35lb.lzcic4wl.abiwlrkh.p8dawk7l")).click();
+
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".a8c37x1j.ni8dbmo4.stjgntxs.l9j0dhe7.pby63qed")));
+        String loginMessage = driver.findElement(By.cssSelector(".a8c37x1j.ni8dbmo4.stjgntxs.l9j0dhe7.pby63qed")).getAttribute("innerText");
+
+        Assert.assertEquals(loginMessage, "Войдите на Facebook");
+
+        driver.quit();
+    }
 
 
     @After
