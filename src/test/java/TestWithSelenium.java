@@ -11,6 +11,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.LoginPage;
+import pages.SignUpPage;
+import pages.UserMainPhotoPage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,17 +24,97 @@ public class TestWithSelenium {
 
     private static final String email = "";
     private static final String invalidEmail = "";
-    private static final String password = "Nazar2021KPI2021";
+    private static final String invalidEmail2 = "";
+    private static final String password = "";
     private static final String name = "Саня";
     private static final String surname = "Красівий";
+    private static final String searchedPerson = "Володимир Зеленський";
 
     private static final long timeOutInSeconds = 10;
 
     @Before
-    public void SetUp() {
+    public void start() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
         System.setProperty("webdriver.gecko.driver", "src/main/resources/geckodriver.exe");
         System.out.println("Test start");
+    }
+
+    @Test
+    public void openUserPageFromLinkObjectPage() {
+        WebDriver driver = createWebDriver();
+        WebDriverWait waiter = createWebDriverWait(driver);
+
+        UserMainPhotoPage userPage = new UserMainPhotoPage(driver, waiter, "https://www.facebook.com/photo/?fbid=2431988927051469&set=a.1376998622550510");
+        String username = userPage.searchUserByUsernameInLink(searchedPerson).getUsername();
+
+        Assert.assertTrue(username.contains(username));
+
+        driver.quit();
+    }
+
+    @Test
+    public void testLikeAvatarWhileNotLoginObjectPage() {
+        WebDriver driver = createWebDriver();
+        WebDriverWait waiter = createWebDriverWait(driver);
+
+        UserMainPhotoPage userPage = new UserMainPhotoPage(driver, waiter, "https://www.facebook.com/photo/?fbid=2431988927051469&set=a.1376998622550510");
+        String loginMessage = userPage.giveLikeToPhotoUnauthorized();
+
+        Assert.assertEquals(loginMessage, "Войдите на Facebook");
+
+        driver.quit();
+    }
+
+    @Test
+    public void testSignUPWithInvalidUsedEmailPageObject() {
+        WebDriver driver = createWebDriver();
+        WebDriverWait waiter = createWebDriverWait(driver);
+
+        SignUpPage signUpPage = new SignUpPage(driver, waiter);
+        String errorMessage = signUpPage.signUpWithInvalidUsedEmail(name, surname, invalidEmail, password);
+
+        Assert.assertEquals(errorMessage, "Введите действительный номер мобильного телефона или эл. адрес.");
+
+        driver.quit();
+    }
+
+    @Test
+    public void testSignUPWithAlreadyUsedEmailObjectPage() {
+        WebDriver driver = createWebDriver();
+        WebDriverWait waiter = createWebDriverWait(driver);
+
+        SignUpPage signUpPage = new SignUpPage(driver, waiter);
+        String errorMessage = signUpPage.signUpWithAlreadyUsedEmail(name, surname, email, password).getErrorMessage();
+
+        Assert.assertEquals(errorMessage, "Извините, мы не можем вас зарегистрировать.");
+
+        driver.quit();
+    }
+
+    @Test
+    public void testLoginWithValidDataObjectPage() {
+        WebDriver driver = createWebDriver();
+        WebDriverWait waiter = createWebDriverWait(driver);
+
+        LoginPage loginPage = new LoginPage(driver, waiter);
+        String greeting = loginPage.loginValidUser(email, password).getGreeting();
+
+        Assert.assertEquals(greeting, name);
+
+        driver.quit();
+    }
+
+    @Test
+    public void testLoginWithInvalidDataObjectPage() {
+        WebDriver driver = createWebDriver();
+        WebDriverWait waiter = createWebDriverWait(driver);
+
+        LoginPage loginPage = new LoginPage(driver, waiter);
+        String error = loginPage.loginInvalidUser(invalidEmail2, password);
+
+        Assert.assertEquals(error, "Неверное имя пользователя или пароль");
+
+        driver.quit();
     }
 
     @Test
@@ -56,18 +139,17 @@ public class TestWithSelenium {
     }
 
     @Test
-    public void testLoginWitheInvalidData() {
+    public void testLoginWithInvalidData() {
         WebDriver driver = createWebDriver();
         WebDriverWait waiter = createWebDriverWait(driver);
 
         driver.get("https://www.facebook.com/");
         waiter.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("._42ft._4jy0._9o-t._4jy3._4jy1.selected._51sy")));
         driver.findElement(By.cssSelector("._42ft._4jy0._9o-t._4jy3._4jy1.selected._51sy")).click();
-        driver.findElement(By.id("email")).sendKeys(email);
+        driver.findElement(By.id("email")).sendKeys(invalidEmail2);
         driver.findElement(By.id("pass")).sendKeys(password + "1");
 
         driver.findElement(By.name("login")).click();
-
         try {
             waiter.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("._9ay7")));
             String errorMessage = driver.findElement(By.cssSelector("._9ay7")).getAttribute("innerText");
@@ -77,6 +159,7 @@ public class TestWithSelenium {
             Assert.assertEquals(elements.get(0).getAttribute("innerText"), "Неверные данные");
             Assert.assertEquals(elements.get(1).getAttribute("innerText"), "Неверное имя пользователя или пароль");
         }
+
         driver.quit();
     }
 
@@ -91,17 +174,22 @@ public class TestWithSelenium {
 
         List<WebElement> inputs = driver.findElements(By.tagName("input"));
 
-        for (WebElement el : inputs){
+        for (WebElement el : inputs) {
             switch (el.getAttribute("name")) {
-                case "firstname": el.sendKeys(name);
-                break;
-                case "lastname": el.sendKeys(surname);
-                break;
-                case "reg_email__": el.sendKeys(email);
-                break;
-                case "reg_passwd__": el.sendKeys(password);
-                break;
-                default: break;
+                case "firstname":
+                    el.sendKeys(name);
+                    break;
+                case "lastname":
+                    el.sendKeys(surname);
+                    break;
+                case "reg_email__":
+                    el.sendKeys(email);
+                    break;
+                case "reg_passwd__":
+                    el.sendKeys(password);
+                    break;
+                default:
+                    break;
             }
         }
         waiter.until(ExpectedConditions.visibilityOfElementLocated(By.name("reg_email_confirmation__")));
@@ -148,17 +236,22 @@ public class TestWithSelenium {
 
         List<WebElement> inputs = driver.findElements(By.tagName("input"));
 
-        for (WebElement el : inputs){
+        for (WebElement el : inputs) {
             switch (el.getAttribute("name")) {
-                case "firstname": el.sendKeys(name);
+                case "firstname":
+                    el.sendKeys(name);
                     break;
-                case "lastname": el.sendKeys(surname);
+                case "lastname":
+                    el.sendKeys(surname);
                     break;
-                case "reg_email__": el.sendKeys(invalidEmail);
+                case "reg_email__":
+                    el.sendKeys(invalidEmail);
                     break;
-                case "reg_passwd__": el.sendKeys(password);
+                case "reg_passwd__":
+                    el.sendKeys(password);
                     break;
-                default: break;
+                default:
+                    break;
             }
         }
         waiter.until(ExpectedConditions.visibilityOfElementLocated(By.name("reg_email_confirmation__")));
@@ -194,7 +287,7 @@ public class TestWithSelenium {
     }
 
     @Test
-    public void testLikeAvatarWhileNotLogin(){
+    public void testLikeAvatarWhileNotLogin() {
         WebDriver driver = createWebDriver();
         WebDriverWait waiter = createWebDriverWait(driver);
 
@@ -213,6 +306,26 @@ public class TestWithSelenium {
         driver.quit();
     }
 
+    @Test
+    public void openUserPageFromLink() {
+        WebDriver driver = createWebDriver();
+        WebDriverWait waiter = createWebDriverWait(driver);
+
+        driver.get("https://www.facebook.com/photo/?fbid=2431988927051469&set=a.1376998622550510");
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".hu5pjgll.lzf7d6o1.sp_67hOLVoSKzI.sx_0c1a09")));
+        driver.findElement(By.cssSelector(".hu5pjgll.lzf7d6o1.sp_67hOLVoSKzI.sx_0c1a09")).click();
+
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(searchedPerson)));
+        driver.findElement(By.linkText(searchedPerson)).click();
+
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".gmql0nx0.l94mrbxd.p1ri9a11.lzcic4wl.bp9cbjyn.j83agx80")));
+        String username = driver.findElement(By.cssSelector(".gmql0nx0.l94mrbxd.p1ri9a11.lzcic4wl.bp9cbjyn.j83agx80")).getAttribute("innerText");
+
+        Assert.assertTrue(username.contains(username));
+
+        driver.quit();
+    }
+
 
     @After
     public void close() {
@@ -223,11 +336,11 @@ public class TestWithSelenium {
         return new ChromeDriver(createChromeOptions());
     }
 
-    private WebDriverWait createWebDriverWait(WebDriver driver){
+    private WebDriverWait createWebDriverWait(WebDriver driver) {
         return new WebDriverWait(driver, timeOutInSeconds);
     }
 
-    private ChromeOptions createChromeOptions(){
+    private ChromeOptions createChromeOptions() {
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("profile.default_content_setting_values.notifications", 2);
         ChromeOptions options = new ChromeOptions();
