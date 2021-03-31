@@ -26,4 +26,4 @@ jobs:
 #          chmod +x ./scripts/InstallChrome.sh
 #                      ./scripts/InstallChrome.sh
       - name: Build with Maven
-        run: ls /home/runner/work/Selenium-with-JTest
+        run: ls /home/runner/work/Selenium-with-JTest/Selenium-with-JTest
