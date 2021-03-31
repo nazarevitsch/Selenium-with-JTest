@@ -41,7 +41,7 @@ public class UserMainPhotoPage {
     }
 
     private void acceptCookies(){
-        waiter.until(ExpectedConditions.visibilityOfElementLocated(byCssSelectorAcceptCookies));
-        driver.findElement(byCssSelectorAcceptCookies).click();
+//        waiter.until(ExpectedConditions.visibilityOfElementLocated(byCssSelectorAcceptCookies));
+//        driver.findElement(byCssSelectorAcceptCookies).click();
     }
 }

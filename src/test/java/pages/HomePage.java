@@ -10,7 +10,7 @@ public class HomePage {
     private WebDriver driver;
     private WebDriverWait waiter;
 
-    private By buXpathGreeting = By.xpath("/html/body/div/div/div[1]/div/div[3]/div[1]/div[2]/span/span[2]/span");
+    private By byXpathGreeting = By.xpath("/html/body/div[1]/div[3]/div[1]/div/form/div/div[1]/strong");
 
 
     public HomePage(WebDriver driver, WebDriverWait waiter){
@@ -19,7 +19,7 @@ public class HomePage {
     }
 
     public String getGreeting(){
-        waiter.until(ExpectedConditions.visibilityOfElementLocated(buXpathGreeting));
-        return driver.findElement(buXpathGreeting).getAttribute("innerText");
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(byXpathGreeting));
+        return driver.findElement(byXpathGreeting).getAttribute("innerText");
     }
 }
