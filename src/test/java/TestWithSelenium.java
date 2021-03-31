@@ -31,7 +31,7 @@ public class TestWithSelenium {
 
     @Before
     public void start() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver2.exe");
+        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver");
         driver = createWebDriver();
         waiter = createWebDriverWait(driver);
         System.out.println("Test start");
