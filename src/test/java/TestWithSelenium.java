@@ -31,7 +31,7 @@ public class TestWithSelenium {
 
     @Before
     public void start() {
-        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriverlinux");
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         driver = createWebDriver();
         waiter = createWebDriverWait(driver);
         System.out.println("Test start");
@@ -42,16 +42,8 @@ public class TestWithSelenium {
         UserMainPhotoPage userPage = new UserMainPhotoPage(driver, waiter, "https://www.facebook.com/photo/?fbid=2431988927051469&set=a.1376998622550510");
         String username = userPage.searchUserByUsernameInLink(searchedPerson).getUsername();
 
-//        Assert.assertEquals(username, searchedPerson);
-        Assert.assertTrue(username.contains(searchedPerson));
-    }
-
-    @Test
-    public void testLikeAvatarWhileNotLoginObjectPage() {
-        UserMainPhotoPage userPage = new UserMainPhotoPage(driver, waiter, "https://www.facebook.com/photo/?fbid=2431988927051469&set=a.1376998622550510");
-        String loginMessage = userPage.giveLikeToPhotoUnauthorized();
-
-        Assert.assertEquals(loginMessage, "Войдите на Facebook");
+        Assert.assertEquals(username, searchedPerson);
+//        Assert.assertTrue(username.contains(searchedPerson));
     }
 
     @Test
@@ -109,8 +101,8 @@ public class TestWithSelenium {
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("prefs", prefs);
         options.addArguments("headless");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
+//        options.addArguments("--no-sandbox");
+//        options.addArguments("--disable-dev-shm-usage");
         return options;
     }
 }
