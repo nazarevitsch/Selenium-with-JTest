@@ -24,7 +24,7 @@ public class TestWithSelenium {
     private static final String surname = "Красівий";
     private static final String searchedPerson = "Володимир Зеленський";
 
-    private static final long timeOutInSeconds = 10;
+    private static final long timeOutInSeconds = 20;
 
     private WebDriverWait waiter;
     private WebDriver driver;
@@ -42,8 +42,8 @@ public class TestWithSelenium {
         UserMainPhotoPage userPage = new UserMainPhotoPage(driver, waiter, "https://www.facebook.com/photo/?fbid=2431988927051469&set=a.1376998622550510");
         String username = userPage.searchUserByUsernameInLink(searchedPerson).getUsername();
 
-        Assert.assertEquals(username, searchedPerson);
-//        Assert.assertTrue(username.contains(searchedPerson));
+//        Assert.assertEquals(username, searchedPerson);
+        Assert.assertTrue(username.contains(searchedPerson));
     }
 
     @Test
