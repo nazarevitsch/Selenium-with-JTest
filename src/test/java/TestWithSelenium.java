@@ -109,6 +109,8 @@ public class TestWithSelenium {
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("prefs", prefs);
         options.addArguments("headless");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
         return options;
     }
 }
