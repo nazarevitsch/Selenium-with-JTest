@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
+
 
 public class LoginPage {
 
@@ -40,11 +42,10 @@ public class LoginPage {
         driver.findElement(byIdEmail).sendKeys(email);
         driver.findElement(byIdPassword).sendKeys(password);
         driver.findElement(byNameLogin).click();
-//        try {
-//            Thread.sleep(200000);
-//        } catch (Exception e){}
-        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".pam._3-95._9ay3.uiBoxRed")));
-        return driver.findElement(By.cssSelector(".pam._3-95._9ay3.uiBoxRed")).findElements(byTagDiv).get(1).getAttribute("innerText");
+        waiter.withTimeout(Duration.ofSeconds(10));
+        System.out.println(driver.getTitle());
+//        return driver.findElement(By.cssSelector(".pam._3-95._9ay3.uiBoxRed")).findElements(byTagDiv).get(1).getAttribute("innerText");
+        return driver.getTitle();
     }
 
     private void acceptCookies(){

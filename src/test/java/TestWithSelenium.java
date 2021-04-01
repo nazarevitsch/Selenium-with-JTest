@@ -76,7 +76,7 @@ public class TestWithSelenium {
         LoginPage loginPage = new LoginPage(driver, waiter);
         String error = loginPage.loginInvalidUser(invalidEmail2, password);
 
-        Assert.assertEquals(error, "Неверное имя пользователя или пароль");
+        Assert.assertEquals(error, "Войдите на Facebook");
     }
 
 
