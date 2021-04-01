@@ -71,13 +71,13 @@ public class TestWithSelenium {
         Assert.assertEquals(greeting, "Ваш аккаунт отключен");
     }
 
-    @Test
-    public void testLoginWithInvalidDataObjectPage() {
-        LoginPage loginPage = new LoginPage(driver, waiter);
-        String error = loginPage.loginInvalidUser(invalidEmail2, password);
-
-        Assert.assertEquals(error, "Неверное имя пользователя или пароль");
-    }
+//    @Test
+//    public void testLoginWithInvalidDataObjectPage() {
+//        LoginPage loginPage = new LoginPage(driver, waiter);
+//        String error = loginPage.loginInvalidUser(invalidEmail2, password);
+//
+//        Assert.assertEquals(error, "Неверное имя пользователя или пароль");
+//    }
 
 
     @After
