@@ -100,7 +100,7 @@ public class TestWithSelenium {
         prefs.put("profile.default_content_setting_values.notifications", 2);
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("prefs", prefs);
-//        options.addArguments("headless");
+        options.addArguments("headless");
 //        options.addArguments("--no-sandbox");
 //        options.addArguments("--disable-dev-shm-usage");
         return options;
