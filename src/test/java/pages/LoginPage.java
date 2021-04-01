@@ -36,6 +36,7 @@ public class LoginPage {
     }
 
     public String loginInvalidUser(String email, String password) {
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(byIdEmail));
         driver.findElement(byIdEmail).sendKeys(email);
         driver.findElement(byIdPassword).sendKeys(password);
         driver.findElement(byNameLogin).click();
@@ -44,8 +45,8 @@ public class LoginPage {
     }
 
     private void acceptCookies(){
-//        waiter.until(ExpectedConditions.visibilityOfElementLocated(byCssSelectorAcceptCookies));
-//        driver.findElement(byCssSelectorAcceptCookies).click();
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(byCssSelectorAcceptCookies));
+        driver.findElement(byCssSelectorAcceptCookies).click();
     }
 
 }
