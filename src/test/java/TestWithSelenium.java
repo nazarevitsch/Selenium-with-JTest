@@ -51,6 +51,7 @@ public class TestWithSelenium {
         SignUpPage signUpPage = new SignUpPage(driver, waiter);
         String errorMessage = signUpPage.signUpWithInvalidUsedEmail(name, surname, invalidEmail, password);
 
+
         Assert.assertTrue(errorMessage.equals("Введите действительный номер мобильного телефона или эл. адрес.") ||
                 errorMessage.equals("Введите действительный электронный адрес."));
     }
@@ -101,8 +102,6 @@ public class TestWithSelenium {
         ChromeOptions options = new ChromeOptions();
         options.setExperimentalOption("prefs", prefs);
         options.addArguments("headless");
-//        options.addArguments("--no-sandbox");
-//        options.addArguments("--disable-dev-shm-usage");
         return options;
     }
 }
