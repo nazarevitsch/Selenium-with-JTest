@@ -40,13 +40,16 @@ public class LoginPage {
         driver.findElement(byIdEmail).sendKeys(email);
         driver.findElement(byIdPassword).sendKeys(password);
         driver.findElement(byNameLogin).click();
-        waiter.until(ExpectedConditions.visibilityOfElementLocated(byIdError));
-        return driver.findElement(byIdError).findElements(byTagDiv).get(1).getAttribute("innerText");
+//        try {
+//            Thread.sleep(200000);
+//        } catch (Exception e){}
+        waiter.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".pam._3-95._9ay3.uiBoxRed")));
+        return driver.findElement(By.cssSelector(".pam._3-95._9ay3.uiBoxRed")).findElements(byTagDiv).get(1).getAttribute("innerText");
     }
 
     private void acceptCookies(){
-        waiter.until(ExpectedConditions.visibilityOfElementLocated(byCssSelectorAcceptCookies));
-        driver.findElement(byCssSelectorAcceptCookies).click();
+//        waiter.until(ExpectedConditions.visibilityOfElementLocated(byCssSelectorAcceptCookies));
+//        driver.findElement(byCssSelectorAcceptCookies).click();
     }
 
 }
