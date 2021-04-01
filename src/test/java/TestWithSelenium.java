@@ -61,7 +61,7 @@ public class TestWithSelenium {
         SignUpPage signUpPage = new SignUpPage(driver, waiter);
         String errorMessage = signUpPage.signUpWithAlreadyUsedEmail(name, surname, email, password).getErrorMessage();
 
-        Assert.assertEquals(errorMessage, "Извините, мы не можем вас зарегистрировать.");
+        Assert.assertEquals(errorMessage, "Извините, ть.");
     }
 
     @Test
